@@ -13,6 +13,7 @@ import pandas as pd
 import shutil
 import time
 import getpass
+import glob
 
 ### Get install directory ###
 
@@ -20,16 +21,12 @@ import getpass
 INSTALL_DIR = os.path.dirname(workflow.snakefile)
 
 
-configfile: os.path.join(INSTALL_DIR, "config/config.json")
+configfile: "config/config.json"
 
 
 ### Setup cell table ###
 
-CELL_DF_FILE_NAME = config.get("cell_table", "ont_basecall.tsv")
-
-CELL_DF = pd.read_csv(
-    CELL_DF_FILE_NAME, sep="\t", index_col=["SAMPLE", "SEQ_TYPE", "RUN_ID", "PROFILE"]
-)
+CELL_DF = pd.read_csv("config/manifest.tab", sep="\t", index_col=["SAMPLE","SEQ_TYPE","CHEMISTRY","RUN_ID"])
 
 ### Includes ###
 
@@ -41,7 +38,7 @@ wildcard_constraints:
     run_id="|".join(CELL_DF.index.get_level_values("RUN_ID")),
     profile="|".join(list(config["profile"].keys())),
     modbase="|".join(list(config["mod_base_profile"].keys())),
-    version_dash="|".join(["0-7-2","0-7-3","0-8-1"])
+    version_dash="|".join(["0-8-1"])
 
 include: "rules/basecall.snake"
 
