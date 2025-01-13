@@ -28,6 +28,7 @@ configfile: "config/config.json"
 
 CELL_DF = pd.read_csv("config/manifest.tab", sep="\t", index_col=["SAMPLE","SEQ_TYPE","CHEMISTRY","RUN_ID"])
 
+
 ### Includes ###
 
 shell.prefix("source ~/.bash_profile; ")
@@ -38,7 +39,7 @@ wildcard_constraints:
     run_id="|".join(CELL_DF.index.get_level_values("RUN_ID")),
     profile="|".join(list(config["profile"].keys())),
     modbase="|".join(list(config["mod_base_profile"].keys())),
-    version_dash="|".join(["0-8-1"])
+    version_dash="|".join(["0-8-2"])
 
 include: "rules/basecall.snake"
 
